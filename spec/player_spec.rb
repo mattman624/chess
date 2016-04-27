@@ -1,8 +1,8 @@
 require 'spec_helper.rb'
 
 describe 'Player object' do
-
-  let(:player1) { Player.new("Matt", "white") }
+  let(:board) { Board.new }
+  let(:player1) { Player.new("Matt", "white", board) }
   
   describe '#new' do
 

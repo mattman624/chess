@@ -8,111 +8,54 @@ class Board
     @spaces = Array.new(columns) { Array.new(rows) { " " } }
   end 
 
-  def set_piece(column, piece)
-    if valid_input?(column)
-      row = find_next_open_space(column)
-      @spaces[column-1][row - 1] = piece
-      row
+  def set_piece(piece)
+    coords = translate_coords(piece.position)
+    if valid_input?(coords)      
+      @spaces[coords[0] - 1][coords[1] - 1] = piece
     else
-      -1
+      false
     end    
   end
 
-  def get_piece(column, row)
-    if valid_input?(column, row)
-      piece = @spaces[column - 1][row - 1]
+  def get_piece(coords)
+    translated_coords = translate_coords(coords)
+    if valid_input?(translated_coords)
+      piece = @spaces[translated_coords[0] - 1][translated_coords[1] - 1]
     else 
       return nil
     end
-  end
+  end  
 
-  
-
-  def check_win?(column, row)
-    win_condition = 3
-    win = false
-    i = 0
-
-    possible_win_paths = collect_paths(column, row)
-    puts possible_win_paths.inspect
-    until win || possible_win_paths[i].nil?
-      last_mark = ""
-      marks_in_row = 0
-
-      possible_win_paths[i].each do |mark|
-        if mark == last_mark
-          marks_in_row += 1 
-        else
-          marks_in_row = 0
-        end
-        last_mark = mark 
-        win = true if marks_in_row >= win_condition && last_mark != " "
+  def valid_input?(coords)
+    unless coords.nil?
+      column = coords[0].to_i
+      row = coords[1].to_i
+      if column > @columns || column < 1 || row > @rows || row < 1
+        false
+      else
+        true
       end
-      i += 1
-    end
-    win
-  end
-
-  def collect_paths(column, row)
-    paths = []
-   
-    paths << get_vertical_path(column)
-    paths << get_horizontal_path(row)    
-    paths << get_upward_path(column, row)
-    paths << get_downward_path(column, row)
-
-    paths
-  end
-
-  def get_vertical_path(column)
-    @spaces[column - 1]
-  end
-
-  def get_horizontal_path(row)
-    row_values = []
-
-    @columns.times do |column|
-      row_values << get_piece(column + 1, row)
-    end
-    row_values
-  end
-
-  def get_downward_path(column, row)
-    path = []
-    working_row = get_starting_row_dw(column, row)
-
-    @columns.times do |column_number|
-      path << get_piece(column_number + 1, working_row) if valid_input?(column_number + 1, working_row)
-      working_row -= 1
-    end
-    path
-  end
-
-  def get_upward_path(column, row)
-    path = []
-    working_row = get_starting_row_uw(column, row)
-
-    @columns.times do |column_number|
-      path << get_piece(column_number + 1, working_row) if valid_input?(column_number + 1, working_row)
-      working_row += 1
-    end
-    path
-  end
-
-  def valid_input?(column = 1, row = 1)
-    if column > @columns || column < 1 || row > @rows || row < 1
-      false
     else
-      true
+      false
     end
   end
 
-  def get_starting_row_uw(column, row)
-    row - (column - 1)
+  def translate_coords(coords)
+    table = { :a => 1, :b => 2, :c => 3, :d => 4, :e => 5, :f => 6, :g => 7, :h=> 8}
+    translated_coords = [table[coords[0].to_sym], coords[1].to_i]
   end
 
-  def get_starting_row_dw(column, row)
-    row + column - 1
+  def chess_coords(column, row)
+    table = %w(NA a b c d e f g h)
+    "#{table[column]}#{row}"
+  end
+
+
+  def relative_position(coords, column_move, row_move)
+    position = translate_coords(coords)
+    new_column = position[0] + column_move
+    new_row = position[1] + row_move
+    chess_coords(new_column, new_row)
   end
 
   def show
