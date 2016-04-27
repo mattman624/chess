@@ -13,5 +13,7 @@ describe "Piece object" do
     it 'gives black pieces the black symbol' do
       expect(black_pawn.symbol).to eq("\u265F")
     end
+
+    it 'is on the board' 
   end
 end

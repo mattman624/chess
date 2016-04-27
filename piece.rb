@@ -1,11 +1,13 @@
 
 class Piece
   attr_accessor :position, :color
-  attr_reader :symbol
+  attr_reader :symbol, :type, :active
 
   def initialize(position, color)
     @position = position
     @color = color
+    @type = self.class
+    @active = true
     set_mark(@color)
   end
 
@@ -16,6 +18,7 @@ class Piece
   def move(coordinates)
 
   end
+
 
 end
 
