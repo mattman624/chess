@@ -10,8 +10,13 @@ class Board
 
   def set_piece(piece)
     coords = translate_coords(piece.position)
+    
     if valid_input?(coords)      
       @spaces[coords[0] - 1][coords[1] - 1] = piece
+      if piece.moves > 0
+        old_coords = translate_coords(piece.prev_position)
+        @spaces[old_coords[0] - 1][old_coords[1] -1] = " "
+      end
     else
       false
     end    
@@ -55,7 +60,12 @@ class Board
     position = translate_coords(coords)
     new_column = position[0] + column_move
     new_row = position[1] + row_move
-    chess_coords(new_column, new_row)
+    
+    if valid_input?([new_column, new_row])
+      chess_coords(new_column, new_row)
+    else
+      nil
+    end
   end
 
   def show
