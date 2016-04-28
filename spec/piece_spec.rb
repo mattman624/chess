@@ -118,5 +118,20 @@ describe "Piece object" do
   end
 
   describe '#up_right_moves' do
+    it 'finds all diagonal moves up-right' do
+      expect(queen.up_right_moves(queen.position)).to eq(%w(f5 g6 h7))
+    end
+  end
+
+  describe '#down_left_moves' do
+    it 'finds all diagonal moves down and left' do
+      expect(queen.down_left_moves(queen.position)).to eq(%w(b1 c2 d3))
+    end
+  end
+
+  describe '#down_right_moves' do
+    it 'finds all diagonal moves down and right' do
+      expect(queen.down_right_moves(queen.position)).to eq(%w(f3 g2 h1))
+    end
   end
 end
